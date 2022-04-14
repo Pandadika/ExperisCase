@@ -8,14 +8,14 @@ namespace ExperiaCase.Models
 {
     internal class Library
     {
-        public List<Product> Products { get; set; }
+        public List<Product> Films { get; set; }
 
         public string PrintLibrary()
         {
             string output = "";
-            foreach (Product product in Products)
+            foreach (Product product in Films)
             {
-                output += $"{product.ToString()}{Environment.NewLine}";
+                output += product.ToString();
             }
             return output;
         }

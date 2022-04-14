@@ -19,5 +19,12 @@ namespace ExperiaCase.Models
             _shown = shown;
             _bought = bought;
         }
+
+
+        public override string ToString()
+        {
+            return $"id = {_id}, Name {_name}, Shown {string.Join(',',_shown)}, Bought = {string.Join(',',_bought)}";
+        }
     }
+
 }
