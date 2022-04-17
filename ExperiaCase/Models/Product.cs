@@ -8,7 +8,7 @@ namespace ExperiaCase.Models
 {
     internal class Product : IComparable<Product>
     {
-        private int _id;
+        public int _id;
         private string _name;
         private int _year;
         public List<string> _searchWord;
@@ -43,10 +43,11 @@ namespace ExperiaCase.Models
         public List<string> GetSearchWords() { return _searchWord; }
 
 
-        //sort list by id
+        //sort Product by id
         int IComparable<Product>.CompareTo(Product other)
         {
             return _id.CompareTo(other._id);
         }
+
     }
 }

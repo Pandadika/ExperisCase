@@ -8,11 +8,11 @@ namespace ExperiaCase.Models
 {
     internal class User
     {
-        private string _id;
-        private string _name;
+        public int _id;
+        public string _name;
         public List<int> _shownList;
         public List<int> _boughtList;
-        public User(string id, string name, List<int> shown, List<int> bought)
+        public User(int id, string name, List<int> shown, List<int> bought)
         {
             _id = id;
             _name = name;

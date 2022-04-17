@@ -1,11 +1,14 @@
 ﻿using ExperiaCase.Models;
+using ExperiaCase.Codes;
 
 // Database mappen ligges i exe folderen, for at gøre det nemt.
 // Load in data
 string path = Directory.GetCurrentDirectory() + "/DB/";
 string[] Users = File.ReadAllLines(path + "Users.txt");
 string[] Products = File.ReadAllLines(path + "Products.txt");
+string[] CurrentUserSession = File.ReadAllLines(path + "CurrentUserSession.txt");
 int count = 0;
+Random random = new Random();
 
 // Create user list with user objects
 List<User> UsersList = new List<User>();
@@ -25,7 +28,7 @@ foreach (var item in Users)
     }
 
     UsersList.Add(
-        new User(values[0], values[1], shown , bought)
+        new User(int.Parse(values[0]), values[1], shown , bought)
         );
 }
 
@@ -76,6 +79,14 @@ foreach (User user in UsersList)
     }
 }
 
+// Making list of UserSessions
+List<UserSession> userSessions = new List<UserSession>();
+foreach (var item in CurrentUserSession)
+{
+    string[] values = item.Split(',');
+    userSessions.Add(new UserSession() {userId = int.Parse(values[0]), viewing = int.Parse(values[1])}); 
+}
+
 /// <summary>
 /// Showing number bought
 /// </summary>
@@ -115,25 +126,8 @@ foreach (User user in UsersList)
     }
 }*/
 
-
 // Custom sorting
-FilmLibrary.Films.Sort(delegate (Product x, Product y)
-{
-    return y.TimesBought.CompareTo(x.TimesBought);
-});
-
-Console.WriteLine("Search by Word in SearchWords ex Action");
-FilmLibrary.Films.Sort();
-foreach (Product item in FilmLibrary.Films)
-{
-    if (item._searchWord.Exists(s => s.Contains("Action")))
-    {
-        Console.WriteLine(item.GetName()+" has Action");
-    }
-}
-
-
-FilmLibrary.SortByMostViewed();
+/*FilmLibrary.SortByMostViewed();
 Console.WriteLine("Most viewed");
 for (int i = 0; i < 3; i++)
 {
@@ -162,6 +156,120 @@ foreach (var item in FilmLibrary.Films)
     }
 }
 
+FilmLibrary.TopFilms(3, "comedy", SearchCriteria.score);*/
+
+
+/*List<Product> ActionProducts = new List<Product>();
+ActionProducts = FilmLibrary.GetAllInGenre("Comedy");
+Console.WriteLine("Comedy Movies");
+foreach (var item in ActionProducts)
+{
+    Console.WriteLine(item.GetName());
+}*/
+
+Console.WriteLine("");
+Console.WriteLine("Finding users hopefully");
+foreach (var item in userSessions)
+{
+    Console.WriteLine(UsersList.Find(u => u._id.Equals(item.userId))._name+" Viewing "+ FilmLibrary.Films.Find(p => p._id.Equals(item.viewing)).GetName());
+    Console.WriteLine(OtherUsersAlso(item.userId, item.viewing));
+}
+
+string OtherUsersAlso(int userid, int viewing)
+{
+    // finding the user, the products they are viewing and a list of other users who has bought it.
+    string result = "";
+    User currentUser = UsersList.Find(u => u._id.Equals(userid));
+    Product currentViewing = FilmLibrary.Films.Find(p => p._id.Equals(viewing));
+    List<User> otherUsers = UsersList.FindAll(u => u._boughtList.Exists(i => i == viewing));
+    otherUsers.Remove(currentUser);
+    List<Product> similar = new List<Product>();
+    List<Product> otherUserProducts = new List<Product>();
+    bool viewed = false;
+    
+
+
+    //if other user bought, make list of products bought.
+    if (otherUsers.Any())
+    {
+        foreach (User user in otherUsers)
+        {
+            foreach (int p in user._boughtList)
+            {
+                if (!otherUserProducts.Contains(FilmLibrary.Films.Find(prod => prod._id.Equals(p))))
+                {
+                    otherUserProducts.Add(FilmLibrary.Films.Find(prod => prod._id.Equals(p)));
+                }
+            }
+        }
+        otherUserProducts.Remove(currentViewing);
+        //Printing other bought items
+        if (otherUserProducts.Any())
+        {
+            Console.WriteLine($"Other viewers who bought{currentViewing.GetName()} also bought");
+            foreach (var item in otherUserProducts)
+            {
+                Console.WriteLine(item.GetName());
+            }
+        }
+    }
+    else // else making list of other users who viewed
+    {
+        viewed = true;  
+        otherUsers = UsersList.FindAll(u => u._shownList.Exists(i => i == viewing));
+        otherUsers.Remove(currentUser);
+    }
+
+    //if users viewed make list of products viewed.
+    if (otherUsers.Any() && viewed)
+    {
+        foreach (User user in otherUsers)
+        {
+            foreach (int p in user._shownList)
+            {
+                if (!otherUserProducts.Contains(FilmLibrary.Films.Find(prod => prod._id.Equals(p))))
+                {
+                    otherUserProducts.Add(FilmLibrary.Films.Find(prod => prod._id.Equals(p)));
+                }
+            }
+        }
+        otherUserProducts.Remove(currentViewing);
+        //printing other viewed items
+        if (otherUserProducts.Any())
+        {
+            Console.WriteLine($"Other viewers who viewed{currentViewing.GetName()} also viewed");
+            foreach (var item in otherUserProducts)
+            {
+                Console.WriteLine(item.GetName());
+            }
+        }
+    }
+    else
+    {
+        FilmLibrary.TopFilms(3, currentViewing._searchWord[random.Next(currentViewing._searchWord.Count)], SearchCriteria.bought);
+        return "No similar users found";
+    }
+
+
+    
+
+
+
+
+/*
+    Console.WriteLine("current user");
+    Console.WriteLine(currentUser._name);
+    Console.WriteLine("Similar users");
+    foreach (var item in otherUsers)
+    {
+        Console.WriteLine(item._name);
+    }
+    Console.WriteLine("Looking at");
+    Console.WriteLine(currentViewing.GetName());
+*/
+
+    return result;
+}
 
 /*Console.WriteLine("Calculating mode");
 for (int i = 1; i < NumberBought.Length; i++)
@@ -198,10 +306,10 @@ Console.WriteLine("Mode is " + mode);*/
 
 
 // printing user list
-foreach (var item in UsersList)
+/*foreach (var item in UsersList)
 {
     Console.WriteLine(item.ToString());
-}
+}*/
 
 /*
 foreach (var item in FilmLibrary.Films)
