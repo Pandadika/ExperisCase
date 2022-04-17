@@ -10,20 +10,20 @@ namespace ExperiaCase.Models
     {
         private string _id;
         private string _name;
-        private List<string> _shown;
-        private List<string> _bought;
-        public User(string id, string name, List<string> shown, List<string> bought)
+        public List<int> _shownList;
+        public List<int> _boughtList;
+        public User(string id, string name, List<int> shown, List<int> bought)
         {
             _id = id;
             _name = name;
-            _shown = shown;
-            _bought = bought;
+            _shownList = shown;
+            _boughtList = bought;
         }
 
 
         public override string ToString()
         {
-            return $"id = {_id}, Name {_name}, Shown {string.Join(',',_shown)}, Bought = {string.Join(',',_bought)}";
+            return $"id = {_id}, Name {_name}, Shown {string.Join(',',_shownList)}, Bought = {string.Join(',',_boughtList)}";
         }
     }
 

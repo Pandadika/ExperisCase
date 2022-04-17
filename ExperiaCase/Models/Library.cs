@@ -19,5 +19,30 @@ namespace ExperiaCase.Models
             }
             return output;
         }
+
+        //Sorting
+        public void SortByMostViewed()
+        {
+            Films.Sort(delegate (Product x, Product y)
+            {
+                return y.TimesViewed.CompareTo(x.TimesViewed);
+            });
+        }
+
+        public void SortByMostBought()
+        {
+            Films.Sort(delegate (Product x, Product y)
+            {
+                return y.TimesBought.CompareTo(x.TimesBought);
+            });
+        }
+
+        public void SortByHigestReview()
+        {
+            Films.Sort(delegate (Product x, Product y)
+            {
+                return y._score.CompareTo(x._score);
+            });
+        }
     }
 }
