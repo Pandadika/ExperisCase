@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ExperiaCase.Codes;
 
 namespace ExperiaCase.Models
 {
@@ -91,7 +90,7 @@ namespace ExperiaCase.Models
                         default:
                             break;
                     }
-                    Console.WriteLine($"{item.GetName()} has keyword {keyword} {end}");
+                    Console.WriteLine($"{item.name} has keyword {keyword} {end}");
                 }
             }
         }

@@ -8,8 +8,8 @@ namespace ExperiaCase.Models
 {
     internal class Product : IComparable<Product>
     {
-        public int _id;
-        private string _name;
+        public int id;
+        public string name;
         private int _year;
         public List<string> _searchWord;
         public double _score;
@@ -20,8 +20,8 @@ namespace ExperiaCase.Models
 
         public Product(int id, string name, int year, List<string> searchWords, double score, double price)
         {
-            _id = id;
-            _name = name;
+            this.id = id;
+            this.name = name;
             _year = year;
             _searchWord = searchWords;
             _score = score;
@@ -31,13 +31,7 @@ namespace ExperiaCase.Models
 
         public override string ToString()
         {
-            return $"Id = {_id}, Name = {_name}, Year = {_year}, Genre(s)= {string.Join(',',_searchWord)}, Score = {_score}, Price = {_price}";
-        }
-
-
-        public string GetName()
-        {
-            return _name;
+            return $"Id = {id}, Name = {name}, Year = {_year}, Genre(s)= {string.Join(',',_searchWord)}, Score = {_score}, Price = {_price}";
         }
 
         public List<string> GetSearchWords() { return _searchWord; }
@@ -46,7 +40,7 @@ namespace ExperiaCase.Models
         //sort Product by id
         int IComparable<Product>.CompareTo(Product other)
         {
-            return _id.CompareTo(other._id);
+            return other._score.CompareTo(_score);
         }
 
     }
