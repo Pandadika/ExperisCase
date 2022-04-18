@@ -28,7 +28,7 @@ foreach (var item in Users)
     }
 
     UsersList.Add(
-        new User(int.Parse(values[0]), values[1], shown, bought)
+        new User(int.Parse(values[0]), values[1].Trim(), shown, bought)
         );
 }
 
@@ -90,16 +90,54 @@ foreach (var item in CurrentUserSession)
 //&&&&&&&&&&&&&&&&& Inilization end &&&&&&&&&&&&&&&&&&&&&//
 
 
-//&&&&&&&&&&&&&&&&& MENU &&&&&&&&&&&&&&&&&&&&//
-Console.WriteLine("Welcome to Experias Online Movie Shop");
+//&&&&&&&&&&&&&&&&& CONSOLE MENU &&&&&&&&&&&&&&&&&&&&//
+string input;
 
-
-
-
-Console.WriteLine("");
-Console.WriteLine("Finding users hopefully");
-foreach (var item in userSessions)
+while (true)
 {
-    Console.WriteLine(UsersList.Find(u => u.id.Equals(item.userId)).name + " Viewing " + FilmLibrary.Films.Find(p => p.id.Equals(item.viewing)).name);
-    Functions.OtherUsersAlso(item.userId, item.viewing, UsersList, FilmLibrary);
+    //Main menu
+    Console.WriteLine("-------------------------------------");
+    Console.WriteLine("Welcome to Experis Online Movie Shop");
+    Console.WriteLine("-------------------------------------");
+    Console.WriteLine();
+    Console.WriteLine("See all (M)ovies, all (U)sers in database or (C)urrent User Sessions");
+    input = Console.ReadLine().ToLower();
+    switch (input)
+    {
+        case "m":
+            Console.WriteLine("------MOVIES--------");
+            Functions.PrintAllFilms(FilmLibrary.Films);
+            break;
+        case "u":
+            Console.WriteLine("------USERS-------");
+            Functions.PrintAllUsers(UsersList);
+            break;
+        case "c":
+            Console.WriteLine();
+            Console.WriteLine("Finding users hopefully");
+            Console.WriteLine();
+            foreach (var item in userSessions)
+            {
+                Console.WriteLine(UsersList.Find(u => u.id.Equals(item.userId)).name + " Viewing " + FilmLibrary.Films.Find(p => p.id.Equals(item.viewing)).name);
+                Functions.OtherUsersAlso(item.userId, item.viewing, UsersList, FilmLibrary);
+            }
+            break;
+        default:
+            break;
+    }
+    Console.WriteLine("---------------------------------------");
+    Console.WriteLine("Press enter to return to Main Menu");
+    Console.ReadLine();
+    Console.Clear();
 }
+Console.WriteLine("See All Movies in database");
+FilmLibrary.SortByMostBought();
+Functions.PrintAllFilms(FilmLibrary.Films);
+Console.WriteLine("Sort by id, Name, Year, Most Bought or Most Viewed.");
+Console.WriteLine("See all Users in database");
+Console.WriteLine("See Current User sessions");
+
+
+
+
+

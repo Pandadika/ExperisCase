@@ -10,7 +10,7 @@ namespace ExperiaCase.Models
     {
         public List<Product> Films { get; set; }
 
-        public string PrintLibrary()
+        public string GetFullLibrary()
         {
             string output = "";
             foreach (Product product in Films)

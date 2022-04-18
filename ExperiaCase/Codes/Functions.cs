@@ -151,6 +151,7 @@ namespace ExperiaCase.Codes
                 Console.WriteLine("No similar users found");
                 FilmLibrary.TopFilms(3, currentViewing.searchWord[random.Next(currentViewing.searchWord.Count)], SearchCriteria.bought);
             }
+            Console.WriteLine();// adding a line under result
         }
 
     }

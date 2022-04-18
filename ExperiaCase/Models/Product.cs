@@ -36,10 +36,10 @@ namespace ExperiaCase.Models
 
 
 
-        //sort Product by score
+        //sort Product by id
         int IComparable<Product>.CompareTo(Product other)
         {
-            return other.score.CompareTo(score);
+            return id.CompareTo(other.id);
         }
 
     }
