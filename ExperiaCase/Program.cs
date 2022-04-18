@@ -1,7 +1,7 @@
 ﻿
-/// <summary>
-/// Initilization Begin
-/// </summary>
+
+//&&&&&&&&&&&&&&&&& Initilization Begin &&&&&&&&&&&&&&&&&&&&&&//
+
 // Database mappen ligges i exe folderen, for at gøre det nemt.
 // Load in data
 string path = Directory.GetCurrentDirectory() + "/DB/";
@@ -15,7 +15,7 @@ List<User> UsersList = new List<User>();
 foreach (var item in Users)
 {
     string[] values = item.Split(',');
-    List<int> shown  = new List<int>();
+    List<int> shown = new List<int>();
     List<int> bought = new List<int>();
 
     foreach (string value in values[2].Split(';'))
@@ -28,7 +28,7 @@ foreach (var item in Users)
     }
 
     UsersList.Add(
-        new User(int.Parse(values[0]), values[1], shown , bought)
+        new User(int.Parse(values[0]), values[1], shown, bought)
         );
 }
 
@@ -49,7 +49,7 @@ foreach (var item in Products)
     }
 
     FilmLibrary.Films.Add(
-        new Product(int.Parse(substring[0]), substring[1], int.Parse(substring[2]), genres, double.Parse(substring[8],System.Globalization.CultureInfo.InvariantCulture), double.Parse(substring[9]))
+        new Product(int.Parse(substring[0]), substring[1], int.Parse(substring[2]), genres, double.Parse(substring[8], System.Globalization.CultureInfo.InvariantCulture), double.Parse(substring[9]))
         );
 }
 
@@ -57,7 +57,7 @@ foreach (var item in Products)
 int ids = Products.Length + 1;
 foreach (User user in UsersList)
 {
-    foreach (int boughtItem in user._boughtList)
+    foreach (int boughtItem in user.boughtList)
     {
         for (int id = 1; id < ids; id++)
         {
@@ -67,7 +67,7 @@ foreach (User user in UsersList)
             }
         }
     }
-    foreach (int shownItem in user._shownList)
+    foreach (int shownItem in user.shownList)
     {
         for (int id = 1; id < ids; id++)
         {
@@ -84,13 +84,15 @@ List<UserSession> userSessions = new List<UserSession>();
 foreach (var item in CurrentUserSession)
 {
     string[] values = item.Split(',');
-    userSessions.Add(new UserSession() {userId = int.Parse(values[0]), viewing = int.Parse(values[1])}); 
+    userSessions.Add(new UserSession() { userId = int.Parse(values[0]), viewing = int.Parse(values[1]) });
 }
 
+//&&&&&&&&&&&&&&&&& Inilization end &&&&&&&&&&&&&&&&&&&&&//
 
-/// <summary>
-/// Inilization end
-/// </summary>
+
+//&&&&&&&&&&&&&&&&& MENU &&&&&&&&&&&&&&&&&&&&//
+Console.WriteLine("Welcome to Experias Online Movie Shop");
+
 
 
 
@@ -98,6 +100,6 @@ Console.WriteLine("");
 Console.WriteLine("Finding users hopefully");
 foreach (var item in userSessions)
 {
-    Console.WriteLine(UsersList.Find(u => u._id.Equals(item.userId))._name+" Viewing "+FilmLibrary.Films.Find(p => p.id.Equals(item.viewing)).name);
+    Console.WriteLine(UsersList.Find(u => u.id.Equals(item.userId)).name + " Viewing " + FilmLibrary.Films.Find(p => p.id.Equals(item.viewing)).name);
     Functions.OtherUsersAlso(item.userId, item.viewing, UsersList, FilmLibrary);
 }

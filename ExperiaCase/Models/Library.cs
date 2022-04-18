@@ -41,15 +41,27 @@ namespace ExperiaCase.Models
         {
             Films.Sort(delegate (Product x, Product y)
             {
-                return y._score.CompareTo(x._score);
+                return y.score.CompareTo(x.score);
             });
         }
 
-        public List<Product> GetAllInGenre (string keyword)
+        public void SortById()
         {
-            keyword = keyword.Capitalize();
-            return Films.FindAll(f => f._searchWord.Exists(s => s.Contains(keyword))); 
+            Films.Sort(delegate (Product x, Product y)
+            {
+                return x.id.CompareTo(y.id);
+            });
         }
+
+        public void SortByName()
+        {
+            Films.Sort(delegate (Product x, Product y)
+            {
+                return x.name.CompareTo(y.name);
+            });
+        }
+
+
 
         public void TopFilms(int num, string keyword, SearchCriteria searchCriteria)
         {
@@ -73,13 +85,13 @@ namespace ExperiaCase.Models
             }
             foreach (var item in this.Films)
             {
-                if (item._searchWord.Exists(s => s.Contains(keyword) && counter > 0))
+                if (item.searchWord.Exists(s => s.Contains(keyword) && counter > 0))
                 {
                     counter--;
                     switch (searchCriteria)
                     {
                         case SearchCriteria.score:
-                            end = $"and has a score of {item._score}";
+                            end = $"and has a score of {item.score}";
                             break;
                         case SearchCriteria.bought:
                             end = $"and was bought {item.TimesBought} times";
