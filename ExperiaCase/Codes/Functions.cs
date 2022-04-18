@@ -73,11 +73,11 @@ namespace ExperiaCase.Codes
 
         /// <summary>
         /// OtherUsersAlso is the main function of the program, that tells the current user what other similar users did
-        /// It will printing an output of other users prefered viewings. IF other users bought the one you are looking at, print a list of other products they bought, 
+        /// It will be printing an output of other users prefered viewings. IF other users bought the one you are looking at, print a list of other products they bought, 
         /// IF they did not buy that product, print a list of the Items they also viewed
         /// IF no user either bought or viewed the product, print a list of popular movies in a random genre the product has.
         /// </summary>
-        static public void OtherUsersAlso(int userid, int viewing, List<User> UsersList, Library FilmLibrary)
+        static public void OtherUsersAlso(int userid, int viewing, List<User> UsersList, Library FilmLibrary, int count)
         {
             // finding the user, the products they are viewing and a list of other users who has bought it.
             User currentUser = UsersList.Find(u => u.id.Equals(userid));
@@ -87,6 +87,7 @@ namespace ExperiaCase.Codes
             List<Product> otherUserProducts = new List<Product>();
             bool viewed = false;
             Random random = new Random();
+            
 
 
 
@@ -110,7 +111,15 @@ namespace ExperiaCase.Codes
                     Console.WriteLine($"Other viewers who bought{currentViewing.name} also bought");
                     foreach (var item in otherUserProducts)
                     {
-                        Console.WriteLine(item.name);
+                        if (count > 0)
+                        {
+                            Console.WriteLine(item.name);
+                            count--;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -142,14 +151,22 @@ namespace ExperiaCase.Codes
                     otherUserProducts.Sort();
                     foreach (var item in otherUserProducts)
                     {
-                        Console.WriteLine(item.name + " Score " + item.score);
+                        if (count > 0)
+                        {
+                            Console.WriteLine(item.name + " Score " + item.score);
+                            count--;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
             else
             {
                 Console.WriteLine("No similar users found");
-                FilmLibrary.TopFilms(3, currentViewing.searchWord[random.Next(currentViewing.searchWord.Count)], SearchCriteria.bought);
+                FilmLibrary.TopFilms(count, currentViewing.searchWord[random.Next(currentViewing.searchWord.Count)], SearchCriteria.bought);
             }
             Console.WriteLine();// adding a line under result
         }

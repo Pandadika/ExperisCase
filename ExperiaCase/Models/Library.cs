@@ -61,6 +61,14 @@ namespace ExperiaCase.Models
             });
         }
 
+        public void SortByYear()
+        {
+            Films.Sort(delegate (Product x, Product y)
+            {
+                return y.year.CompareTo(x.year);
+            });
+        }
+
 
 
         public void TopFilms(int num, string keyword, SearchCriteria searchCriteria)

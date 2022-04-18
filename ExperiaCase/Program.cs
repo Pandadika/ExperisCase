@@ -92,22 +92,60 @@ foreach (var item in CurrentUserSession)
 
 //&&&&&&&&&&&&&&&&& CONSOLE MENU &&&&&&&&&&&&&&&&&&&&//
 string input;
+int showing = 3;
 
 while (true)
 {
-    //Main menu
+//Main menu
+RESTART:
     Console.WriteLine("-------------------------------------");
     Console.WriteLine("Welcome to Experis Online Movie Shop");
     Console.WriteLine("-------------------------------------");
     Console.WriteLine();
-    Console.WriteLine("See all (M)ovies, all (U)sers in database or (C)urrent User Sessions");
+    Console.WriteLine("See all (M)ovies, all (U)sers in database, (C)urrent User Sessions or (L)og in as a User");
     input = Console.ReadLine().ToLower();
     switch (input)
     {
         case "m":
             Console.WriteLine("------MOVIES--------");
             Functions.PrintAllFilms(FilmLibrary.Films);
-            break;
+            REDRAW:
+            Console.WriteLine();
+            Console.WriteLine("Sort by (i)d, (N)ame, (Y)ear, Most (B)ought or Most (V)iewed. E(x)it");
+            input = Console.ReadLine().ToLower();
+            switch (input)
+            {
+                case "i":
+                    Console.Clear();
+                    FilmLibrary.SortById();
+                    Functions.PrintAllFilms(FilmLibrary.Films);
+                    goto REDRAW;
+                case "n":
+                    Console.Clear();
+                    FilmLibrary.SortByName();
+                    Functions.PrintAllFilms(FilmLibrary.Films);
+                    goto REDRAW;
+                case "y":
+                    Console.Clear();
+                    FilmLibrary.SortByYear();
+                    Functions.PrintAllFilms(FilmLibrary.Films);
+                    goto REDRAW;
+                case "b":
+                    Console.Clear();
+                    FilmLibrary.SortByMostBought();
+                    Functions.PrintAllFilms(FilmLibrary.Films);
+                    goto REDRAW;
+                case "v":
+                    Console.Clear();
+                    FilmLibrary.SortByMostViewed();
+                    Functions.PrintAllFilms(FilmLibrary.Films);
+                    goto REDRAW;
+                case "x":
+                    Console.Clear();
+                    goto RESTART;
+                default:
+                    goto REDRAW;
+            }
         case "u":
             Console.WriteLine("------USERS-------");
             Functions.PrintAllUsers(UsersList);
@@ -119,7 +157,49 @@ while (true)
             foreach (var item in userSessions)
             {
                 Console.WriteLine(UsersList.Find(u => u.id.Equals(item.userId)).name + " Viewing " + FilmLibrary.Films.Find(p => p.id.Equals(item.viewing)).name);
-                Functions.OtherUsersAlso(item.userId, item.viewing, UsersList, FilmLibrary);
+                Functions.OtherUsersAlso(item.userId, item.viewing, UsersList, FilmLibrary, showing);
+            }
+            break;
+        case "l":
+            Functions.PrintAllUsers(UsersList);
+            Console.WriteLine("Enter user id");
+            input = Console.ReadLine();
+            int userId;
+            int viewingId;
+            bool isInt = int.TryParse(input, out userId);
+            while (!isInt)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Enter valid user id");
+                input = Console.ReadLine();
+                isInt = int.TryParse(input, out userId);
+            }
+            if (userId <= UsersList.Count && userId > 0)
+            {
+                FilmLibrary.SortById();
+                Functions.PrintAllFilms(FilmLibrary.Films);
+                Console.WriteLine("Enter Id of movie you want to view");
+                input = Console.ReadLine();
+                isInt = int.TryParse(input, out viewingId);
+                while (!isInt)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Enter valid movie id");
+                    input = Console.ReadLine();
+                    isInt = int.TryParse(input, out viewingId);
+                }
+                if (viewingId <= FilmLibrary.Films.Count && viewingId > 0)
+                {
+                    Functions.OtherUsersAlso(userId, viewingId, UsersList, FilmLibrary, showing);
+                }
+                else
+                {
+                    Console.WriteLine("Movie does not exists");
+                }
+            }
+            else
+            {
+                Console.WriteLine("User does not exists");
             }
             break;
         default:
@@ -130,13 +210,6 @@ while (true)
     Console.ReadLine();
     Console.Clear();
 }
-Console.WriteLine("See All Movies in database");
-FilmLibrary.SortByMostBought();
-Functions.PrintAllFilms(FilmLibrary.Films);
-Console.WriteLine("Sort by id, Name, Year, Most Bought or Most Viewed.");
-Console.WriteLine("See all Users in database");
-Console.WriteLine("See Current User sessions");
-
 
 
 
